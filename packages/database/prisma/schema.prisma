@@ -13,3 +13,77 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum RoleEnum {
+  Student
+  Instructor
+  Admin
+}
+
+model User {
+  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  firstName    String
+  lastName     String
+  email        String       @unique
+  passwordHash String
+  role         RoleEnum
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @default(now())
+  course       Course[]
+  enrollments  Enrollment[]
+}
+
+model Course {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  title      String
+  price      Int
+  instructor User     @relation(fields: [userId], references: [id])
+
+  modules     Module[]
+  enrollments Enrollment[]
+  userId      String
+}
+
+model Module {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  title     String
+  position  Int
+
+  lessons Lesson[]
+
+  course   Course? @relation(fields: [courseId], references: [id])
+  courseId String?
+}
+
+model Lesson {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  title    String
+  position Int
+
+  module   Module? @relation(fields: [moduleId], references: [id])
+  moduleId String?
+}
+
+model Enrollment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  enrolledAt DateTime
+  progress   Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  @@unique([userId, courseId])
+}
