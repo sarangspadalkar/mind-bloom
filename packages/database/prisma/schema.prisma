@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -21,29 +15,34 @@ enum RoleEnum {
 }
 
 model User {
-  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
   firstName    String
   lastName     String
-  email        String       @unique
+  email        String   @unique
   passwordHash String
   role         RoleEnum
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @default(now())
-  course       Course[]
-  enrollments  Enrollment[]
+
+  course      Course[]
+  enrollments Enrollment[]
+  reviews     Review[]
 }
 
 model Course {
-  id         String   @id @default(dbgenerated("gen_random_uuid()"))
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  title      String
-  price      Int
-  instructor User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  title     String
+  price     Int
+
+  userId     String
+  instructor User   @relation(fields: [userId], references: [id])
 
   modules     Module[]
   enrollments Enrollment[]
-  userId      String
+  reviews     Review[]
 }
 
 model Module {
@@ -79,11 +78,24 @@ model Enrollment {
   enrolledAt DateTime
   progress   Int
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
   course   Course @relation(fields: [courseId], references: [id])
   courseId String
 
   @@unique([userId, courseId])
+}
+
+model Review {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  rating  Int
+  comment Int
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
 }
