@@ -1,5 +1,6 @@
 import { DateTimeScalar } from "./scalars.js";
 import { queryResolvers } from "./query.js";
+import { mutationResolvers } from "./mutation.js";
 import { courseResolvers } from "./course.js";
 import { userResolvers } from "./user.js";
 import { moduleResolvers } from "./module.js";
@@ -17,8 +18,9 @@ export const resolvers = {
   // Custom scalars
   DateTime: DateTimeScalar,
 
-  // Root queries
+  // Root queries & mutations
   ...queryResolvers,
+  ...mutationResolvers,
 
   // Type-level field resolvers
   ...courseResolvers,

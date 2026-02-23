@@ -21,9 +21,7 @@ export const queryResolvers = {
       return ctx.prisma.user.findUnique({ where: { id: args.id } });
     },
 
-    /** Returns null until authentication is implemented in Phase 2. */
     me: async (_: unknown, __: unknown, ctx: Context) => {
-      // ctx.user will be populated in Phase 2
       if (!ctx.user) return null;
       return ctx.prisma.user.findUnique({ where: { id: ctx.user.id } });
     },
