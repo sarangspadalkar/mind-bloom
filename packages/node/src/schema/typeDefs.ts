@@ -116,6 +116,26 @@ export const typeDefs = `#graphql
     course: Course!
   }
 
+  # ───────────────────────────── Auth ───────────────────────────────
+
+  """Returned by login and register mutations"""
+  type AuthPayload {
+    """JWT access token"""
+    token: String!
+    """The authenticated user"""
+    user: User!
+  }
+
+  input RegisterInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    """Must be at least 8 characters"""
+    password: String!
+    """Defaults to Student if not provided"""
+    role: Role = Student
+  }
+
   # ───────────────────────────── Queries ─────────────────────────────
 
   type Query {
@@ -130,7 +150,7 @@ export const typeDefs = `#graphql
     """Get a user by ID"""
     user(id: ID!): User
 
-    """Get the currently authenticated user (requires auth — returns null until Phase 2)"""
+    """Get the currently authenticated user (returns null if not logged in)"""
     me: User
 
     # ── Courses ──
@@ -153,5 +173,15 @@ export const typeDefs = `#graphql
 
     """Get a single lesson by ID"""
     lesson(id: ID!): Lesson
+  }
+
+  # ───────────────────────────── Mutations ───────────────────────────
+
+  type Mutation {
+    """Register a new user account"""
+    register(input: RegisterInput!): AuthPayload!
+
+    """Log in with email and password"""
+    login(email: String!, password: String!): AuthPayload!
   }
 `;

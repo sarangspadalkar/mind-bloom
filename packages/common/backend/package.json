@@ -1,9 +1,17 @@
 {
-	"name": "@mindbloom/common-backend",
-	"version": "1.0.0",
-	"description": "Shared backend utilities for MindBloom (auth, helpers)",
-	"main": "src/index.ts",
-	"scripts": {
-		"typecheck": "tsc --noEmit"
-	}
+  "name": "@mindbloom/common-backend",
+  "version": "1.0.0",
+  "description": "Shared backend utilities for MindBloom (auth, rate limiting)",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "jose": "^6.0.11",
+    "bcryptjs": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "typescript": "^5.8.2"
+  }
 }
